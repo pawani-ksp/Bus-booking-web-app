@@ -1,0 +1,16 @@
+.login-page {
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f4f7fb;
+}
+
+
+.login-background{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(to right, #4c95d0, #b0c5df);    
+
+
+}
