@@ -1,9 +1,42 @@
-<form>
- <div class="login-background">
-    <h1>Login Page</h1>
- </div>
+<div class="login-page">
 
+   <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon"><img src="/images/logo.png" alt="Bus logo"></span>
+      <span>Weerawarna Express</span>
+    </div>
+    </nav>
 
+   <div class="login-background">
+      <form class="login-card" autocomplete="on">
+         <h1>Login</h1>
+         <p class="login-subtitle">Sign in to book your bus seat.</p>
 
+         <div class="form-group">
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" placeholder="Enter your email" required />
+         </div>
 
-</form>
+         <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" placeholder="Enter your password" required />
+         </div>
+
+         <div class="form-row">
+            <label class="remember-me" for="remember">
+               <input id="remember" name="remember" type="checkbox" />
+               Remember me
+            </label>
+
+            <a href="#" class="forgot-password">Forgot password?</a>
+         </div>
+
+         <button type="submit" class="login-btn">Login</button>
+
+         <p class="login-footer">
+            Don’t have an account?
+            <a href="#">Register</a>
+         </p>
+      </form>
+   </div>
+</div>

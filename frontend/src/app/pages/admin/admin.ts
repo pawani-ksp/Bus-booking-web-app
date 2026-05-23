@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-landing',
+  selector: 'app-admin',
   imports: [RouterLink],
-  templateUrl: './landing.html',
-  styleUrl: './landing.css'
+  templateUrl: './admin.html',
+  styleUrl: './admin.css'
 })
-export class Landing {
+export class Admin {
 }
