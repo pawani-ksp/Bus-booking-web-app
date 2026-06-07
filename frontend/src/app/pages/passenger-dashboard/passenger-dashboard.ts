@@ -24,6 +24,11 @@ export class PassengerDashboard {
       title: 'My bookings',
       description: 'Review active bookings, cancellations, and seat swaps.',
       link: '/my-bookings'
+    },
+    {
+      title: 'Passenger profile',
+      description: 'Update your photo, contact information, and travel details.',
+      link: '/passenger-profile'
     }
   ];
 

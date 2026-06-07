@@ -1,0 +1,91 @@
+<section class="profile-page">
+  <header class="profile-hero">
+    <div>
+      <p class="eyebrow">Passenger Profile</p>
+      
+    </div>
+
+    <div class="hero-sidebar">
+      <a routerLink="/passenger-dashboard" class="back-link">Back to dashboard</a>
+
+      <aside class="photo-card">
+        <div class="photo-frame">
+          <img [src]="photoPreview()" alt="Passenger profile photo preview">
+        </div>
+
+        <label class="upload-button" for="profilePhoto">Upload photo</label>
+        <input id="profilePhoto" type="file" accept="image/*" (change)="onPhotoSelected($event)">
+
+        <div class="photo-note">
+          <p>Use a clear photo for your booking profile.</p>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <form class="profile-form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+    <div class="form-grid">
+        <div class="field full-width">
+          <label for="fullName">Full name</label>
+          <input id="fullName" type="text" formControlName="fullName" placeholder="Enter your full name">
+        </div>
+
+        <div class="field full-width">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" placeholder="Enter your email">
+        </div>
+
+        <div class="field full-width">
+          <label for="phone">Phone number</label>
+          <input id="phone" type="tel" formControlName="phone" placeholder="Enter your phone number">
+        </div>
+
+        <div class="field full-width">
+          <label for="nic">NIC / ID number</label>
+          <input id="nic" type="text" formControlName="nic" placeholder="Enter your NIC or ID">
+        </div>
+
+        <div class="field full-width">
+          <label for="gender">Gender</label>
+          <select id="gender" formControlName="gender">
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field full-width">
+          <label for="city">City</label>
+          <input id="city" type="text" formControlName="city" placeholder="Enter your city">
+        </div>
+
+        <div class="field full-width">
+          <label for="preferredStation">Preferred bus station</label>
+          <input id="preferredStation" type="text" formControlName="preferredStation" placeholder="Enter your nearest station">
+        </div>
+
+        <div class="field full-width">
+          <label for="address">Address</label>
+          <textarea id="address" rows="4" formControlName="address" placeholder="Enter your address"></textarea>
+        </div>
+
+        <div class="field full-width">
+          <label for="emergencyContact">Emergency contact</label>
+          <input id="emergencyContact" type="text" formControlName="emergencyContact" placeholder="Enter emergency contact number">
+        </div>
+
+        <div class="field full-width">
+          <label for="bio">Short bio / note</label>
+          <textarea id="bio" rows="3" formControlName="bio" placeholder="Add a short note about your travel preferences"></textarea>
+        </div>
+    </div>
+
+    @if (savedMessage()) {
+      <p class="status-message">{{ savedMessage() }}</p>
+    }
+
+    <div class="actions">
+      <button type="submit" class="save-button">Save profile</button>
+    </div>
+  </form>
+</section>
