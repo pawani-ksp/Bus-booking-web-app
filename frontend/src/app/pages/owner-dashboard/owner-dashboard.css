@@ -1,0 +1,4 @@
+.owner-dashboard { padding: 16px; }
+.owner-dashboard .controls a { margin-right: 12px; }
+.owner-dashboard .lists { display: flex; gap: 16px; margin-top: 12px; }
+.owner-dashboard .card { border: 1px solid #ddd; padding: 12px; border-radius: 6px; width: 100%; }

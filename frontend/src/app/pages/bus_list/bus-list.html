@@ -1,0 +1,101 @@
+<section class="bus-list-page">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Bus List</p>
+      <h1>Compare available buses and open the seat or route view in one click.</h1>
+      <p class="summary">
+        Review the full schedule before you book so passengers can choose the best bus
+        by route, time, rating, and available seats.
+      </p>
+    </div>
+
+    <aside class="hero-panel">
+      <p class="panel-label">Selected bus</p>
+      <h2>{{ activeBus().name }}</h2>
+      <dl>
+        <div>
+          <dt>Route</dt>
+          <dd>{{ activeBus().route }}</dd>
+        </div>
+        <div>
+          <dt>Seats left</dt>
+          <dd>{{ activeBus().availableSeats }}</dd>
+        </div>
+        <div>
+          <dt>Rating</dt>
+          <dd>{{ activeBus().rating }}</dd>
+        </div>
+      </dl>
+    </aside>
+  </header>
+
+  <section class="bus-grid" aria-label="Available buses">
+    @for (bus of buses; track bus.id) {
+      <article class="bus-card" [class.active]="activeBusId() === bus.id">
+        <div class="card-top">
+          <div>
+            <p class="bus-name">{{ bus.name }}</p>
+            <p class="bus-number">{{ bus.number }}</p>
+          </div>
+          <span class="rating">★ {{ bus.rating }}</span>
+        </div>
+
+        <dl class="bus-details">
+          <div><dt>Bus type</dt><dd>{{ bus.type }}</dd></div>
+          <div><dt>Route</dt><dd>{{ bus.route }}</dd></div>
+          <div><dt>Trip date</dt><dd>{{ bus.tripDate }}</dd></div>
+          <div><dt>Departure time</dt><dd>{{ bus.departureTime }}</dd></div>
+          <div><dt>Arrival time</dt><dd>{{ bus.arrivalTime }}</dd></div>
+          <div><dt>Ticket price</dt><dd>{{ bus.ticketPrice }}</dd></div>
+          <div><dt>Available seats</dt><dd>{{ bus.availableSeats }}</dd></div>
+          <div><dt>Rating</dt><dd>{{ bus.rating }}</dd></div>
+        </dl>
+
+        <div class="card-actions">
+          <button type="button" class="action-button" (click)="showSeats(bus.id)">
+            View seats
+          </button>
+          <button type="button" class="action-button secondary" (click)="showRoute(bus.id)">
+            View route map
+          </button>
+        </div>
+      </article>
+    }
+  </section>
+
+  @if (activeBus(); as bus) {
+    <section class="detail-panel" aria-live="polite">
+      @if (activePanel() === 'seats') {
+        <div>
+          <p class="panel-label">Seat view</p>
+          <h2>{{ bus.name }} seat availability</h2>
+          <p>
+            {{ bus.availableSeats }} seats are currently open for the trip from
+            {{ bus.route }}.
+          </p>
+        </div>
+
+        <div class="seat-map">
+          @for (seat of bus.seatMap; track seat) {
+            <span>{{ seat }}</span>
+          }
+        </div>
+      } @else {
+        <div>
+          <p class="panel-label">Route map</p>
+          <h2>{{ bus.name }} route map</h2>
+          <p>
+            Trip date: {{ bus.tripDate }} | Departure: {{ bus.departureTime }} | Arrival:
+            {{ bus.arrivalTime }}
+          </p>
+        </div>
+
+        <ol class="route-timeline">
+          @for (stop of bus.routeStops; track stop) {
+            <li>{{ stop }}</li>
+          }
+        </ol>
+      }
+    </section>
+  }
+</section>

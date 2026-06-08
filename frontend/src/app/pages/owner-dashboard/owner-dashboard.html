@@ -1,0 +1,26 @@
+<div class="owner-dashboard">
+  <h2>Bus Owner Dashboard</h2>
+
+  <section class="controls">
+    <a routerLink="/register">Register New Bus</a>
+    <a routerLink="/assign-driver">Assign Driver</a>
+  </section>
+
+  <section class="lists">
+    <div class="card">
+      <h3>Your Buses</h3>
+      <div *ngIf="buses.length === 0">No buses registered yet.</div>
+      <ul>
+        <li *ngFor="let b of buses">{{ b.name || 'Unnamed bus' }} - {{ b.route || '-' }}</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Assigned Drivers</h3>
+      <div *ngIf="drivers.length === 0">No drivers assigned yet.</div>
+      <ul>
+        <li *ngFor="let d of drivers">{{ d.name || 'Unnamed driver' }} - {{ d.phone || '-' }}</li>
+      </ul>
+    </div>
+  </section>
+</div>

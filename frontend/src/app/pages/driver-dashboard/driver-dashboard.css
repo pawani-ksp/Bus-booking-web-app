@@ -1,0 +1,3 @@
+.driver-dashboard { padding: 16px; }
+.driver-dashboard .status { margin-bottom: 12px; }
+.driver-dashboard button[disabled] { opacity: 0.6; }
