@@ -2,11 +2,11 @@
   <header class="profile-hero">
     <div>
       <p class="eyebrow">Passenger Profile</p>
-      
+      <h1>Your travel profile</h1>
     </div>
 
     <div class="hero-sidebar">
-      <a routerLink="/passenger-dashboard" class="back-link">Back to dashboard</a>
+      <a routerLink="/passenger-dashboard" class="back-link">← Back to dashboard</a>
 
       <aside class="photo-card">
         <div class="photo-frame">
@@ -23,8 +23,11 @@
     </div>
   </header>
 
-  <form class="profile-form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
-    <div class="form-grid">
+  @if (loadingData()) {
+    <p class="loading-msg">Loading your profile…</p>
+  } @else {
+    <form class="profile-form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+      <div class="form-grid">
         <div class="field full-width">
           <label for="fullName">Full name</label>
           <input id="fullName" type="text" formControlName="fullName" placeholder="Enter your full name">
@@ -78,14 +81,21 @@
           <label for="bio">Short bio / note</label>
           <textarea id="bio" rows="3" formControlName="bio" placeholder="Add a short note about your travel preferences"></textarea>
         </div>
-    </div>
+      </div>
 
-    @if (savedMessage()) {
-      <p class="status-message">{{ savedMessage() }}</p>
-    }
+      @if (errorMessage()) {
+        <p class="error-message" role="alert">{{ errorMessage() }}</p>
+      }
 
-    <div class="actions">
-      <button type="submit" class="save-button">Save profile</button>
-    </div>
-  </form>
+      @if (savedMessage()) {
+        <p class="status-message">{{ savedMessage() }}</p>
+      }
+
+      <div class="actions">
+        <button type="submit" class="save-button" [disabled]="savingData()">
+          @if (savingData()) { Saving… } @else { Save profile }
+        </button>
+      </div>
+    </form>
+  }
 </section>
