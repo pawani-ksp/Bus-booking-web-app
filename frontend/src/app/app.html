@@ -11,6 +11,8 @@
 
 	<nav class="app-nav" aria-label="Main navigation">
 		<a routerLink="/bus-list" routerLinkActive="active">Buses</a>
+		<a routerLink="/bus-station-map" routerLinkActive="active">Station Map</a>
+		<a routerLink="/route-map" routerLinkActive="active">Route Map</a>
 
 		@if (isLoggedIn()) {
 			<a [routerLink]="dashboardRoute()" routerLinkActive="active">Dashboard</a>
