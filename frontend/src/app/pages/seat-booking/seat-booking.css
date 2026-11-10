@@ -1,0 +1,292 @@
+.booking-page {
+  min-height: 100vh;
+  padding: 2rem;
+  color: #12304d;
+  background:
+    radial-gradient(circle at top left,  rgba(76, 149, 208, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(249, 115, 22, 0.1), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #edf4fb 100%);
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.booking-hero { margin-bottom: 1.5rem; }
+.booking-hero h1 {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.6rem, 3vw, 2.6rem);
+  line-height: 1.1;
+}
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #f97316;
+}
+
+/* ── Step indicator ───────────────────────────────────────────────────────── */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+.step {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #8ba3bb;
+  background: #e9f1fa;
+  transition: background 0.2s, color 0.2s;
+}
+.step.active {
+  background: #1e3a8a;
+  color: #fff;
+}
+.step-sep { color: #8ba3bb; font-size: 1.1rem; }
+
+/* ── Shared ───────────────────────────────────────────────────────────────── */
+.error-banner {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 600;
+}
+.loading-msg, .empty-msg {
+  color: #607086;
+  font-style: italic;
+  margin: 2rem 0;
+}
+
+/* ── Bus grid (Step 1) ────────────────────────────────────────────────────── */
+.bus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.bus-card {
+  padding: 1.25rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 30px rgba(18,48,77,0.09);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.bus-name  { margin: 0; font-size: 1.15rem; font-weight: 700; }
+.bus-number{ margin: 0.25rem 0 0; color: #607086; font-size: 0.9rem; }
+.rating {
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: #fff4d4;
+  color: #a16207;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.bus-meta {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 0.6rem 1rem;
+  margin: 0;
+}
+.bus-meta dt { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: #8ba3bb; }
+.bus-meta dd { margin: 0.15rem 0 0; font-weight: 600; font-size: 0.95rem; }
+
+.select-btn {
+  margin-top: auto;
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  background: linear-gradient(135deg, #1e3a8a, #4c95d0);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.select-btn:hover { opacity: 0.88; }
+
+/* ── Seat step (Step 2) ───────────────────────────────────────────────────── */
+.seat-step {
+  background: rgba(255,255,255,0.92);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(18,48,77,0.09);
+}
+.step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.step-header h2 { margin: 0; }
+.sub { margin: 0.3rem 0 0; color: #607086; }
+.seat-counts { margin: 0.5rem 0 0; font-size: 0.9rem; }
+.avail { color: #15803d; font-weight: 700; }
+.taken { color: #b91c1c; font-weight: 700; }
+
+.seat-legend {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1rem;
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.legend-item::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+.avail-dot::before { background: #dcfce7; border: 2px solid #16a34a; }
+.taken-dot::before  { background: #fee2e2; border: 2px solid #dc2626; }
+
+.seat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+  gap: 0.65rem;
+}
+.seat {
+  padding: 0.75rem 0.5rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.seat.available {
+  background: #dcfce7;
+  color: #14532d;
+  border-color: #16a34a;
+}
+.seat.available:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(22,163,74,0.2);
+}
+.seat.taken {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #dc2626;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* ── Confirm step (Step 3) ────────────────────────────────────────────────── */
+.confirm-step {
+  display: flex;
+  justify-content: center;
+}
+.confirm-card {
+  width: min(100%, 520px);
+  background: rgba(255,255,255,0.95);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 18px 45px rgba(18,48,77,0.12);
+}
+.confirm-card h2 { margin: 0.4rem 0 1.25rem; }
+.confirm-details {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+}
+.confirm-details div {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.confirm-details dt {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #8ba3bb;
+}
+.confirm-details dd { margin: 0; font-weight: 600; }
+.confirm-details .highlight { color: #1e3a8a; font-size: 1.1rem; }
+
+.confirm-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.confirm-btn {
+  flex: 1;
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.5rem;
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.confirm-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  border-radius: 999px;
+  background: #e9f1fa;
+  color: #12304d;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.back-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Done step (Step 4) ───────────────────────────────────────────────────── */
+.done-step { display: flex; justify-content: center; }
+.done-card {
+  width: min(100%, 520px);
+  background: rgba(255,255,255,0.95);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 18px 45px rgba(18,48,77,0.12);
+  text-align: center;
+}
+.done-icon {
+  width: 72px;
+  height: 72px;
+  line-height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: #fff;
+  font-size: 2.2rem;
+  margin: 0 auto 1.25rem;
+}
+.done-card h2 { margin: 0 0 0.5rem; color: #15803d; }
+.done-card p  { margin: 0 0 1.5rem; color: #607086; }
+.done-card .confirm-details { text-align: left; }
+.done-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.75rem;
+}
+
+@media (max-width: 640px) {
+  .booking-page { padding: 1rem; }
+  .bus-meta      { grid-template-columns: 1fr; }
+  .confirm-actions, .done-actions { flex-direction: column; }
+  .confirm-btn, .select-btn { width: 100%; }
+}

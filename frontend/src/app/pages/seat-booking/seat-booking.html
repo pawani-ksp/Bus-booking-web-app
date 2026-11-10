@@ -1,0 +1,145 @@
+<section class="booking-page">
+  <header class="booking-hero">
+    <p class="eyebrow">Seat Booking</p>
+    <h1>Pick your bus, choose your seat, confirm your trip.</h1>
+  </header>
+
+  <!-- Step indicator -->
+  <nav class="steps" aria-label="Booking steps">
+    <span class="step" [class.active]="step() === 'select-bus'  || step() === 'select-seat' || step() === 'confirm' || step() === 'done'">1 · Bus</span>
+    <span class="step-sep">›</span>
+    <span class="step" [class.active]="step() === 'select-seat' || step() === 'confirm' || step() === 'done'">2 · Seat</span>
+    <span class="step-sep">›</span>
+    <span class="step" [class.active]="step() === 'confirm' || step() === 'done'">3 · Confirm</span>
+    <span class="step-sep">›</span>
+    <span class="step" [class.active]="step() === 'done'">4 · Done</span>
+  </nav>
+
+  @if (error()) {
+    <p class="error-banner" role="alert">{{ error() }}</p>
+  }
+
+  @if (loading()) {
+    <p class="loading-msg">Loading…</p>
+  }
+
+  <!-- STEP 1: select bus -->
+  @if (step() === 'select-bus' && !loading()) {
+    <section class="bus-grid" aria-label="Choose a bus">
+      @if (buses().length === 0) {
+        <p class="empty-msg">No buses available right now.</p>
+      }
+      @for (bus of buses(); track bus.id) {
+        <article class="bus-card">
+          <div class="card-top">
+            <div>
+              <p class="bus-name">{{ bus.name }}</p>
+              <p class="bus-number">{{ bus.number }}</p>
+            </div>
+            <span class="rating">★ {{ bus.rating }}</span>
+          </div>
+          <dl class="bus-meta">
+            <div><dt>Route</dt><dd>{{ bus.route }}</dd></div>
+            <div><dt>Date</dt><dd>{{ bus.tripDate }}</dd></div>
+            <div><dt>Departs</dt><dd>{{ bus.departureTime }}</dd></div>
+            <div><dt>Arrives</dt><dd>{{ bus.arrivalTime }}</dd></div>
+            <div><dt>Price</dt><dd>{{ bus.ticketPrice }}</dd></div>
+          </dl>
+          <button type="button" class="select-btn" (click)="chooseBus(bus)">
+            Select this bus
+          </button>
+        </article>
+      }
+    </section>
+  }
+
+  <!-- STEP 2: select seat -->
+  @if (step() === 'select-seat' && !loading()) {
+    <section class="seat-step">
+      <div class="step-header">
+        <div>
+          <h2>{{ selectedBus()?.name }}</h2>
+          <p class="sub">{{ selectedBus()?.route }} · {{ selectedBus()?.tripDate }}</p>
+          <p class="seat-counts">
+            <span class="avail">{{ availableSeats().length }} available</span> ·
+            <span class="taken">{{ takenSeats().length }} taken</span>
+          </p>
+        </div>
+        <button type="button" class="back-btn" (click)="goBack()">← Back</button>
+      </div>
+
+      <div class="seat-legend">
+        <span class="legend-item avail-dot">Available</span>
+        <span class="legend-item taken-dot">Taken</span>
+      </div>
+
+      <div class="seat-grid" role="list" aria-label="Seat map">
+        @for (seat of seats(); track seat.id) {
+          <button
+            type="button"
+            class="seat"
+            [class.available]="seat.isAvailable"
+            [class.taken]="!seat.isAvailable"
+            [disabled]="!seat.isAvailable"
+            [attr.aria-label]="'Seat ' + seat.label + (seat.isAvailable ? ' available' : ' taken')"
+            (click)="chooseSeat(seat)"
+          >
+            {{ seat.label }}
+          </button>
+        }
+      </div>
+    </section>
+  }
+
+  <!-- STEP 3: confirm -->
+  @if (step() === 'confirm') {
+    <section class="confirm-step">
+      <div class="confirm-card">
+        <p class="eyebrow">Confirm your booking</p>
+        <h2>Review and confirm</h2>
+
+        <dl class="confirm-details">
+          <div><dt>Bus</dt><dd>{{ selectedBus()?.name }} ({{ selectedBus()?.number }})</dd></div>
+          <div><dt>Route</dt><dd>{{ selectedBus()?.route }}</dd></div>
+          <div><dt>Date</dt><dd>{{ selectedBus()?.tripDate }}</dd></div>
+          <div><dt>Departure</dt><dd>{{ selectedBus()?.departureTime }}</dd></div>
+          <div><dt>Arrival</dt><dd>{{ selectedBus()?.arrivalTime }}</dd></div>
+          <div><dt>Seat</dt><dd class="highlight">{{ selectedSeat()?.label }}</dd></div>
+          <div><dt>Price</dt><dd class="highlight">{{ selectedBus()?.ticketPrice }}</dd></div>
+        </dl>
+
+        @if (error()) {
+          <p class="error-banner" role="alert">{{ error() }}</p>
+        }
+
+        <div class="confirm-actions">
+          <button type="button" class="back-btn" (click)="goBack()" [disabled]="loading()">← Change seat</button>
+          <button type="button" class="confirm-btn" (click)="confirmBooking()" [disabled]="loading()">
+            @if (loading()) { Booking… } @else { Confirm booking }
+          </button>
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- STEP 4: done -->
+  @if (step() === 'done') {
+    <section class="done-step">
+      <div class="done-card">
+        <div class="done-icon" aria-hidden="true">✓</div>
+        <h2>Booking confirmed!</h2>
+        <p>Your booking reference is <strong>#{{ bookingId() }}</strong>.</p>
+        <dl class="confirm-details">
+          <div><dt>Bus</dt><dd>{{ selectedBus()?.name }}</dd></div>
+          <div><dt>Route</dt><dd>{{ selectedBus()?.route }}</dd></div>
+          <div><dt>Date</dt><dd>{{ selectedBus()?.tripDate }}</dd></div>
+          <div><dt>Seat</dt><dd>{{ selectedSeat()?.label }}</dd></div>
+        </dl>
+        <div class="done-actions">
+          <button type="button" class="select-btn" (click)="startOver()">Book another seat</button>
+          <a routerLink="/passenger-dashboard" class="back-btn">Back to dashboard</a>
+        </div>
+      </div>
+    </section>
+  }
+</section>
