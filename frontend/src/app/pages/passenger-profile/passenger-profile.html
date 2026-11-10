@@ -2,7 +2,8 @@
   <header class="profile-hero">
     <div>
       <p class="eyebrow">Passenger Profile</p>
-      <h1>Your travel profile</h1>
+      <h1>Your Travel Profile & Identity</h1>
+      <p class="subtitle">Upload or snap your photo, update your address, and set your nearest bus station.</p>
     </div>
 
     <div class="hero-sidebar">
@@ -13,15 +14,43 @@
           <img [src]="photoPreview()" alt="Passenger profile photo preview">
         </div>
 
-        <label class="upload-button" for="profilePhoto">Upload photo</label>
-        <input id="profilePhoto" type="file" accept="image/*" (change)="onPhotoSelected($event)">
+        <!-- Two photo options: Stored Image File or Access Camera -->
+        <div class="photo-buttons">
+          <label class="upload-button" for="profilePhoto">📁 Choose Image</label>
+          <input id="profilePhoto" type="file" accept="image/*" (change)="onPhotoSelected($event)">
+
+          <button type="button" class="camera-button" (click)="startCamera()">
+            📷 Open Camera
+          </button>
+        </div>
+
+        @if (cameraError()) {
+          <p class="camera-err-msg">{{ cameraError() }}</p>
+        }
 
         <div class="photo-note">
-          <p>Use a clear photo for your booking profile.</p>
+          <p>Deliverable: Image upload via file selector or live camera access.</p>
         </div>
       </aside>
     </div>
   </header>
+
+  <!-- Live Camera Modal -->
+  @if (isCameraOpen()) {
+    <div class="camera-modal-backdrop">
+      <div class="camera-modal-box">
+        <h3>📷 Live Camera Snap</h3>
+        <p class="cam-hint">Position your face inside the view and capture your profile picture.</p>
+        <div class="video-wrapper">
+          <video #cameraVideo autoplay playsinline class="camera-preview-video"></video>
+        </div>
+        <div class="camera-modal-actions">
+          <button type="button" class="btn-snap" (click)="captureCameraSnap()">📸 Capture Photo</button>
+          <button type="button" class="btn-cancel-cam" (click)="stopCamera()">Close Camera</button>
+        </div>
+      </div>
+    </div>
+  }
 
   @if (loadingData()) {
     <p class="loading-msg">Loading your profile…</p>
