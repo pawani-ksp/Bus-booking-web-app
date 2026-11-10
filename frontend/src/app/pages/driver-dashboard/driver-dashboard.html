@@ -1,13 +1,35 @@
 <div class="driver-dashboard">
-  <h2>Driver Dashboard</h2>
+  <header class="dash-header">
+    <div>
+      <p class="eyebrow">Driver Dashboard</p>
+      <h2>Your Current Trip</h2>
+    </div>
+    <span class="live-badge" aria-label="Live data">● Live</span>
+  </header>
 
-  <section class="status">
-    <h3>Current Turn</h3>
-    <p>Turn ID: {{ currentTurn.id }}</p>
-    <p>Passengers on board: {{ currentTurn.passengerCount }}</p>
+  <section class="turn-card">
+    <div class="turn-row">
+      <div class="turn-stat">
+        <span class="stat-label">Turn ID</span>
+        <span class="stat-value">{{ currentTurn.id }}</span>
+      </div>
+      <div class="turn-stat">
+        <span class="stat-label">Bus</span>
+        <span class="stat-value">{{ currentTurn.busNumber ?? '—' }}</span>
+      </div>
+      <div class="turn-stat">
+        <span class="stat-label">Route</span>
+        <span class="stat-value route">{{ currentTurn.route ?? '—' }}</span>
+      </div>
+      <div class="turn-stat highlight">
+        <span class="stat-label">Passengers on board</span>
+        <span class="stat-value big">{{ currentTurn.passengerCount }}</span>
+      </div>
+    </div>
+    <p class="update-note">Updates automatically every 5 seconds.</p>
   </section>
 
   <section class="actions">
-    <button disabled>Refresh count</button>
+    <a routerLink="/bus-list" class="action-link">View bus schedule</a>
   </section>
 </div>
