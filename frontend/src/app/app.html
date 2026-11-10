@@ -8,6 +8,18 @@
 			<small>Bus Booking System</small>
 		</span>
 	</a>
+
+	<nav class="app-nav" aria-label="Main navigation">
+		<a routerLink="/bus-list" routerLinkActive="active">Buses</a>
+
+		@if (isLoggedIn()) {
+			<a [routerLink]="dashboardRoute()" routerLinkActive="active">Dashboard</a>
+			<button type="button" class="nav-logout" (click)="logout()">Log out</button>
+		} @else {
+			<a routerLink="/login"    routerLinkActive="active">Log in</a>
+			<a routerLink="/register" routerLinkActive="active" class="nav-register">Register</a>
+		}
+	</nav>
 </header>
 
 <main class="app-content">

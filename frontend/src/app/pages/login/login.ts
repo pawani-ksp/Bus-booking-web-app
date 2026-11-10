@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -8,33 +9,53 @@ import { RouterLink } from '@angular/router';
   styleUrl: './login.css'
 })
 export class Login {
-  async onSubmit(e: Event) {
+  protected readonly errorMsg = signal('');
+  protected readonly loading  = signal(false);
+
+  constructor(private auth: AuthService, private router: Router) {}
+
+  async onSubmit(e: Event): Promise<void> {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
+    this.errorMsg.set('');
+
+    const form     = e.target as HTMLFormElement;
     const formData = new FormData(form);
-    const email = String(formData.get('email') ?? '');
+    const email    = String(formData.get('email')    ?? '');
     const password = String(formData.get('password') ?? '');
+
+    if (!email || !password) {
+      this.errorMsg.set('Please enter your email and password.');
+      return;
+    }
+
+    this.loading.set(true);
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
+
       if (!res.ok) {
         const err = await res.json();
-        alert(err.message || 'Login failed');
+        this.errorMsg.set(err.message || 'Login failed');
         return;
       }
+
       const data = await res.json();
-      // store token and basic user info
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      // redirect based on role
-      if (data.user.role === 'driver') window.location.href = '/driver-dashboard';
-      else if (data.user.role === 'owner') window.location.href = '/owner-dashboard';
-      else window.location.href = '/passenger-dashboard';
-    } catch (err) {
-      alert('Network error');
+      this.auth.saveSession(data.token, data.user);
+
+      // Navigate based on role
+      const roleRoutes: Record<string, string> = {
+        driver:    '/driver-dashboard',
+        owner:     '/owner-dashboard',
+        passenger: '/passenger-dashboard'
+      };
+      await this.router.navigateByUrl(roleRoutes[data.user.role] ?? '/landing');
+    } catch {
+      this.errorMsg.set('Network error — please try again.');
+    } finally {
+      this.loading.set(false);
     }
   }
 }
