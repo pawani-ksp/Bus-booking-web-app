@@ -1,0 +1,139 @@
+<section class="my-bookings-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Passenger Journey Hub</p>
+      <h1>My Bookings & Seat Management</h1>
+      <p class="subtitle">
+        Review your trip schedule, check confirmation status, request cancellations, or swap seats with other passengers.
+      </p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/seat-booking" class="btn-new-booking">+ Book New Seat</a>
+      <a routerLink="/passenger-dashboard" class="btn-back">Dashboard</a>
+    </div>
+  </header>
+
+  @if (actionNotice()) {
+    <div class="notification-banner">
+      <span>ℹ️ {{ actionNotice() }}</span>
+      <button type="button" class="close-notice-btn" (click)="actionNotice.set('')">✕</button>
+    </div>
+  }
+
+  <div class="bookings-grid">
+    @if (bookings().length === 0) {
+      <div class="empty-card">
+        <p>You have no active or previous bookings.</p>
+        <a routerLink="/seat-booking" class="btn-new-booking">Book Your First Journey</a>
+      </div>
+    }
+
+    @for (booking of bookings(); track booking.id) {
+      <article class="booking-card" [class.cancelled]="booking.status === 'cancelled'">
+        <div class="card-head">
+          <div>
+            <span class="ref-badge">Booking #{{ booking.id }}</span>
+            <h3>{{ booking.busName }}</h3>
+            <span class="bus-plate">{{ booking.busNumber }}</span>
+          </div>
+
+          <div class="status-tags">
+            @if (booking.status === 'confirmed') {
+              <span class="badge confirmed">✓ Confirmed</span>
+            } @else if (booking.status === 'cancelled') {
+              <span class="badge cancelled">✕ Cancelled</span>
+            } @else if (booking.status === 'swap_requested') {
+              <span class="badge swap-pending">⇄ Swap Pending</span>
+            }
+
+            <span class="badge email-sent">📧 Email Sent</span>
+          </div>
+        </div>
+
+        <div class="trip-details-grid">
+          <div class="detail-box">
+            <span class="label">Route</span>
+            <span class="val">{{ booking.route }}</span>
+          </div>
+          <div class="detail-box">
+            <span class="label">Date</span>
+            <span class="val">{{ booking.tripDate }}</span>
+          </div>
+          <div class="detail-box">
+            <span class="label">Departure</span>
+            <span class="val">{{ booking.departureTime }}</span>
+          </div>
+          <div class="detail-box highlight-seat">
+            <span class="label">Assigned Seat</span>
+            <span class="val">{{ booking.seatLabel }}</span>
+          </div>
+        </div>
+
+        @if (booking.status !== 'cancelled') {
+          <div class="card-actions">
+            <button 
+              type="button" 
+              class="action-btn swap" 
+              (click)="openSwapModal(booking)">
+              ⇄ Request Seat Swap
+            </button>
+            <button 
+              type="button" 
+              class="action-btn cancel" 
+              (click)="requestCancel(booking.id)">
+              ✕ Request Cancellation
+            </button>
+            <a routerLink="/bus-rating" class="action-btn rate">
+              ★ Rate Bus
+            </a>
+          </div>
+        } @else {
+          <div class="cancelled-notice">
+            <span>This ticket has been cancelled. Refunds are credited within 24-48 hours.</span>
+          </div>
+        }
+      </article>
+    }
+  </div>
+
+  <!-- Seat Swap Modal -->
+  @if (selectedSwapBooking(); as b) {
+    <div class="modal-backdrop" (click)="closeSwapModal()">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <header class="modal-header">
+          <h3>Request Seat Swap</h3>
+          <button type="button" class="btn-close" (click)="closeSwapModal()">✕</button>
+        </header>
+
+        <div class="modal-body">
+          <p class="modal-desc">
+            You are requesting a swap for Booking <strong>#{{ b.id }}</strong> on <strong>{{ b.busName }}</strong>.
+          </p>
+          <div class="current-seat-box">
+            <span>Your current seat: <strong>{{ b.seatLabel }}</strong></span>
+          </div>
+
+          <label for="swapTarget">Select requested seat to swap into:</label>
+          <select id="swapTarget" #seatSelect class="swap-select">
+            <option value="1B">Seat 1B (Front Aisle)</option>
+            <option value="2A">Seat 2A (Window Front)</option>
+            <option value="4A" selected>Seat 4A (Mid Window)</option>
+            <option value="5B">Seat 5B (Back Aisle)</option>
+          </select>
+          <p class="swap-hint">
+            The passenger currently assigned to this seat or the reservation system will receive your swap request.
+          </p>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="closeSwapModal()">Cancel</button>
+          <button type="button" class="btn-confirm-swap" (click)="submitSeatSwap(seatSelect.value)">
+            Send Swap Request
+          </button>
+        </footer>
+      </div>
+    </div>
+  }
+</section>
+
