@@ -1,0 +1,129 @@
+<section class="route-map-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Live Journey & Waypoint Radar</p>
+      <h1>Bus Route Map View</h1>
+      <p class="summary">
+        Track expressway waypoints, scheduled arrival estimates, and live route path progress.
+      </p>
+    </div>
+
+    <!-- Route Selector Buttons -->
+    <div class="route-picker">
+      @for (r of routes(); track r.id) {
+        <button 
+          type="button" 
+          class="picker-btn"
+          [class.active]="activeRouteId() === r.id"
+          (click)="selectRoute(r.id)">
+          {{ r.name }}
+        </button>
+      }
+    </div>
+  </header>
+
+  <div class="content-split">
+    <!-- Visual Route Map & Timeline Canvas -->
+    <div class="map-view-card">
+      <div class="route-banner">
+        <div>
+          <span class="bus-number-badge">{{ selectedRoute().number }}</span>
+          <h2>{{ selectedRoute().origin }} ➔ {{ selectedRoute().destination }}</h2>
+        </div>
+        <div class="route-stats">
+          <span>⏱️ {{ selectedRoute().duration }}</span>
+          <span>🛣️ {{ selectedRoute().distanceTotal }}</span>
+        </div>
+      </div>
+
+      <!-- SVG Visual Route Waypoint Flow -->
+      <div class="route-svg-box">
+        <svg viewBox="0 0 650 320" class="route-svg">
+          <defs>
+            <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#2563eb" />
+              <stop offset="50%" stop-color="#3b82f6" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+          </defs>
+
+          <!-- Route curve line -->
+          <path d="M 60 160 C 180 80, 240 240, 360 140 S 520 200, 590 120" fill="none" stroke="url(#routeGradient)" stroke-width="8" stroke-linecap="round" />
+
+          <!-- Dynamic Stops -->
+          @for (stop of selectedRoute().stops; track stop.order) {
+            <!-- Stop coordinates calculated dynamically across the SVG -->
+            <g class="stop-node" [class.passed]="stop.isPassed">
+              <circle 
+                [attr.cx]="60 + (stop.order - 1) * 132" 
+                [attr.cy]="stop.order % 2 === 1 ? 150 : 190" 
+                r="16" 
+                class="node-circle" />
+              
+              <text 
+                [attr.x]="60 + (stop.order - 1) * 132" 
+                [attr.y]="stop.order % 2 === 1 ? 115 : 230" 
+                text-anchor="middle" 
+                class="node-text">
+                {{ stop.name }}
+              </text>
+
+              <text 
+                [attr.x]="60 + (stop.order - 1) * 132" 
+                [attr.y]="stop.order % 2 === 1 ? 95 : 250" 
+                text-anchor="middle" 
+                class="node-time">
+                {{ stop.time }}
+              </text>
+            </g>
+          }
+
+          <!-- Live Bus Location Indicator -->
+          <g class="live-bus-marker" transform="translate(260, 155)">
+            <circle cx="0" cy="0" r="14" fill="#f97316" stroke="#ffffff" stroke-width="3" />
+            <circle cx="0" cy="0" r="24" fill="none" stroke="#f97316" stroke-width="2" opacity="0.4">
+              <animate attributeName="r" values="14;30" dur="1.5s" repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0.7;0" dur="1.5s" repeatCount="indefinite" />
+            </circle>
+            <text x="0" y="-20" text-anchor="middle" class="bus-live-tag">🚌 Live GPS</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-dot green">Completed Stop</span>
+        <span class="legend-dot orange">Live Bus Position</span>
+        <span class="legend-dot blue">Upcoming Stop</span>
+      </div>
+    </div>
+
+    <!-- Stop-by-Stop Waypoint Schedule Breakdown -->
+    <div class="schedule-card">
+      <h3>Waypoint Stops & Times</h3>
+      
+      <ol class="timeline-list">
+        @for (stop of selectedRoute().stops; track stop.order) {
+          <li class="timeline-item" [class.done]="stop.isPassed">
+            <div class="timeline-marker">
+              @if (stop.isPassed) { ✓ } @else { {{ stop.order }} }
+            </div>
+            
+            <div class="timeline-info">
+              <div class="stop-row">
+                <h4>{{ stop.name }}</h4>
+                <span class="stop-time">{{ stop.time }}</span>
+              </div>
+              <span class="distance-badge">{{ stop.distance }} from origin</span>
+            </div>
+          </li>
+        }
+      </ol>
+
+      <div class="action-footer">
+        <a routerLink="/seat-booking" class="primary-btn">Book Seats on this Route</a>
+        <a routerLink="/bus-station-map" class="secondary-btn">Check Station Terminals</a>
+      </div>
+    </div>
+  </div>
+</section>
+
