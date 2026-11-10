@@ -1,0 +1,119 @@
+<section class="register-bus-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Owner Fleet Management</p>
+      <h1>Register New Bus for a Route</h1>
+      <p class="subtitle">
+        Add bus vehicle specifications, schedule routes, and assign certified driver credentials.
+      </p>
+    </div>
+
+    <a routerLink="/owner-dashboard" class="back-btn">← Back to Fleet Dashboard</a>
+  </header>
+
+  <div class="form-container">
+    @if (successMsg()) {
+      <div class="alert-success">
+        <span>✓ {{ successMsg() }}</span>
+      </div>
+    }
+
+    @if (errorMsg()) {
+      <div class="alert-error">
+        <span>⚠ {{ errorMsg() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="busForm" (ngSubmit)="submitBus()" class="bus-reg-form">
+      <!-- Section 1: Bus Vehicle Information -->
+      <fieldset class="form-section">
+        <legend>🚌 Bus Vehicle Details</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="busName">Bus Service / Operator Name</label>
+            <input id="busName" type="text" formControlName="busName" placeholder="e.g. Ruhunu Express Super">
+          </div>
+
+          <div class="field">
+            <label for="plateNumber">Plate / Registration Number</label>
+            <input id="plateNumber" type="text" formControlName="plateNumber" placeholder="e.g. WP-4567">
+          </div>
+
+          <div class="field">
+            <label for="busType">Coach Category</label>
+            <select id="busType" formControlName="busType">
+              <option value="Luxury AC Coach">Luxury AC Coach</option>
+              <option value="Semi Luxury">Semi Luxury</option>
+              <option value="Super Line Highway">Super Line Highway</option>
+              <option value="Normal Standard">Normal Standard</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="totalSeats">Total Seating Capacity</label>
+            <input id="totalSeats" type="number" formControlName="totalSeats" placeholder="32">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Section 2: Route & Schedule -->
+      <fieldset class="form-section">
+        <legend>🛣️ Route & Timetable</legend>
+        <div class="form-grid">
+          <div class="field full">
+            <label for="route">Operating Route</label>
+            <input id="route" type="text" formControlName="route" placeholder="e.g. Colombo Fort to Galle via Southern Expressway">
+          </div>
+
+          <div class="field">
+            <label for="tripDate">Trip Date</label>
+            <input id="tripDate" type="date" formControlName="tripDate">
+          </div>
+
+          <div class="field">
+            <label for="departureTime">Departure Time</label>
+            <input id="departureTime" type="text" formControlName="departureTime" placeholder="e.g. 06:30 AM">
+          </div>
+
+          <div class="field">
+            <label for="arrivalTime">Estimated Arrival Time</label>
+            <input id="arrivalTime" type="text" formControlName="arrivalTime" placeholder="e.g. 09:15 AM">
+          </div>
+
+          <div class="field">
+            <label for="ticketPrice">Seat Ticket Price</label>
+            <input id="ticketPrice" type="text" formControlName="ticketPrice" placeholder="e.g. LKR 1,250">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Section 3: Driver Assignment -->
+      <fieldset class="form-section">
+        <legend>👤 Driver Details & Assignment</legend>
+        <div class="form-grid">
+          <div class="field">
+            <label for="driverName">Assigned Driver's Name</label>
+            <input id="driverName" type="text" formControlName="driverName" placeholder="Driver full legal name">
+          </div>
+
+          <div class="field">
+            <label for="driverPhone">Driver Mobile Phone</label>
+            <input id="driverPhone" type="tel" formControlName="driverPhone" placeholder="07XXXXXXXX">
+          </div>
+
+          <div class="field full">
+            <label for="driverLicense">Heavy Vehicle Driving License ID</label>
+            <input id="driverLicense" type="text" formControlName="driverLicense" placeholder="e.g. B12345678">
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" [disabled]="isSubmitting()">
+          @if (isSubmitting()) { Registering bus... } @else { Register Bus & Assign Driver }
+        </button>
+      </div>
+    </form>
+  </div>
+</section>
+
