@@ -8,6 +8,7 @@ import busRouter     from './routes/buses.js';
 import bookingRouter from './routes/bookings.js';
 import driverRouter  from './routes/driver.js';
 import ownerRouter   from './routes/owner.js';
+import profileRouter from './routes/profile.js';
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use('/api/buses',    busRouter);
 app.use('/api/bookings', bookingRouter);
 app.use('/api/driver',   driverRouter);
 app.use('/api/owner',    ownerRouter);
+app.use('/api/profile',  profileRouter);
 
 // ── Start ────────────────────────────────────────────────────────────────────
 app.listen(port, () => {
