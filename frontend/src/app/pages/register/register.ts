@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, signal } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -9,32 +9,57 @@ import { RouterLink } from '@angular/router';
   styleUrl: './register.css'
 })
 export class Register {
-  async onSubmit(e: Event) {
+  protected readonly errorMsg = signal('');
+  protected readonly loading  = signal(false);
+
+  constructor(private router: Router) {}
+
+  async onSubmit(e: Event): Promise<void> {
     e.preventDefault();
-    const form = e.target as HTMLFormElement;
+    this.errorMsg.set('');
+
+    const form     = e.target as HTMLFormElement;
     const formData = new FormData(form);
+
+    const password        = String(formData.get('password')         ?? '');
+    const confirmPassword = String(formData.get('confirm-password') ?? '');
+
+    if (password !== confirmPassword) {
+      this.errorMsg.set('Passwords do not match.');
+      return;
+    }
+
     const data = {
-      name: String(formData.get('name') ?? ''),
-      phone: String(formData.get('number') ?? ''),
-      email: String(formData.get('email') ?? ''),
-      password: String(formData.get('password') ?? ''),
-      role: String(formData.get('role') ?? '')
+      name:     String(formData.get('name')   ?? ''),
+      phone:    String(formData.get('number') ?? ''),
+      email:    String(formData.get('email')  ?? ''),
+      password,
+      role:     String(formData.get('role')   ?? 'passenger')
     };
+
+    if (!data.name || !data.email || !data.password || !data.role) {
+      this.errorMsg.set('Please fill in all required fields.');
+      return;
+    }
+
+    this.loading.set(true);
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
+
       if (res.ok) {
-        // redirect to login
-        window.location.href = '/login';
+        await this.router.navigateByUrl('/login');
       } else {
         const err = await res.json();
-        alert(err.message || 'Registration failed');
+        this.errorMsg.set(err.message || 'Registration failed');
       }
-    } catch (err) {
-      alert('Network error');
+    } catch {
+      this.errorMsg.set('Network error — please try again.');
+    } finally {
+      this.loading.set(false);
     }
   }
 }
