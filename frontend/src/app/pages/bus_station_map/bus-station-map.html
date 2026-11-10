@@ -1,0 +1,141 @@
+<section class="station-map-page">
+  <header class="map-header">
+    <div>
+      <p class="eyebrow">Station Map & GPS View</p>
+      <h1>Find Available Buses at Bus Stations</h1>
+      <p class="subtitle">
+        Explore bus terminals across Sri Lanka, check real-time stationed buses, and jump straight into seat booking.
+      </p>
+    </div>
+
+    <div class="gps-badge-card">
+      <div class="gps-indicator">
+        <span class="gps-dot"></span>
+        <span class="gps-text">{{ gpsStatus() }}</span>
+      </div>
+      <button type="button" class="gps-btn" (click)="detectLiveLocation()">
+        📍 Detect My GPS Location
+      </button>
+    </div>
+  </header>
+
+  <div class="map-layout">
+    <!-- Interactive Visual Map Display -->
+    <div class="interactive-map-card">
+      <div class="map-toolbar">
+        <span>📍 Interactive Station Terminal Radar</span>
+        <span class="station-count">{{ stations().length }} Station Hubs</span>
+      </div>
+
+      <!-- SVG Map Representation of Stations -->
+      <div class="map-canvas-container">
+        <svg viewBox="0 0 700 480" class="map-svg" aria-label="Bus Station Terminal Map">
+          <!-- Background map contours -->
+          <path d="M 120 50 Q 250 20 400 60 T 580 180 Q 640 300 500 420 Q 320 460 180 400 Q 80 320 100 180 Z" fill="#e2edfb" stroke="#bcd4f2" stroke-width="3" />
+          
+          <!-- Highway connection links -->
+          <line x1="220" y1="260" x2="380" y2="180" stroke="#93c5fd" stroke-width="4" stroke-dasharray="6,4" />
+          <line x1="220" y1="260" x2="300" y2="390" stroke="#93c5fd" stroke-width="4" stroke-dasharray="6,4" />
+          <line x1="220" y1="260" x2="200" y2="190" stroke="#93c5fd" stroke-width="4" stroke-dasharray="6,4" />
+
+          <!-- Colombo Station Pin -->
+          <g class="map-pin" [class.selected]="selectedStationId() === 1" (click)="selectStation(1)">
+            <circle cx="220" cy="260" r="24" class="pin-halo" />
+            <circle cx="220" cy="260" r="14" class="pin-core colombo" />
+            <text x="220" y="295" text-anchor="middle" class="pin-label">Colombo (12 Buses)</text>
+          </g>
+
+          <!-- Kandy Station Pin -->
+          <g class="map-pin" [class.selected]="selectedStationId() === 2" (click)="selectStation(2)">
+            <circle cx="380" cy="180" r="22" class="pin-halo" />
+            <circle cx="380" cy="180" r="13" class="pin-core kandy" />
+            <text x="380" y="215" text-anchor="middle" class="pin-label">Kandy (8 Buses)</text>
+          </g>
+
+          <!-- Galle Station Pin -->
+          <g class="map-pin" [class.selected]="selectedStationId() === 3" (click)="selectStation(3)">
+            <circle cx="300" cy="390" r="22" class="pin-halo" />
+            <circle cx="300" cy="390" r="13" class="pin-core galle" />
+            <text x="300" y="425" text-anchor="middle" class="pin-label">Galle (6 Buses)</text>
+          </g>
+
+          <!-- Negombo Station Pin -->
+          <g class="map-pin" [class.selected]="selectedStationId() === 4" (click)="selectStation(4)">
+            <circle cx="200" cy="190" r="20" class="pin-halo" />
+            <circle cx="200" cy="190" r="12" class="pin-core negombo" />
+            <text x="140" y="195" text-anchor="middle" class="pin-label">Negombo (7)</text>
+          </g>
+
+          <!-- User GPS marker if active -->
+          @if (userGpsLocation()) {
+            <g class="user-gps-marker">
+              <circle cx="240" cy="270" r="8" fill="#3b82f6" stroke="#ffffff" stroke-width="2" />
+              <circle cx="240" cy="270" r="16" fill="none" stroke="#3b82f6" stroke-width="1.5" opacity="0.6">
+                <animate attributeName="r" values="8;24" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0" dur="2s" repeatCount="indefinite" />
+              </circle>
+              <text x="240" y="295" text-anchor="middle" class="user-gps-label">You are here</text>
+            </g>
+          }
+        </svg>
+      </div>
+
+      <!-- Quick Station Select Bar -->
+      <div class="station-pills">
+        @for (station of stations(); track station.id) {
+          <button 
+            type="button" 
+            class="station-pill"
+            [class.active]="selectedStationId() === station.id"
+            (click)="selectStation(station.id)">
+            <strong>{{ station.city }}</strong> ({{ station.busesCount }} buses)
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Station Details & Available Buses Panel -->
+    <div class="station-detail-card">
+      <div class="card-header">
+        <div>
+          <span class="station-city-tag">{{ selectedStation().city }} Hub</span>
+          <h2>{{ selectedStation().name }}</h2>
+          <p class="coords">GPS: {{ selectedStation().lat }}° N, {{ selectedStation().lng }}° E</p>
+        </div>
+      </div>
+
+      <div class="bus-section-title">
+        <h3>Buses Ready for Booking at Station</h3>
+        <span class="live-count">{{ selectedStation().buses.length }} Available</span>
+      </div>
+
+      <div class="station-bus-list">
+        @for (bus of selectedStation().buses; track bus.id) {
+          <article class="bus-item">
+            <div class="bus-primary">
+              <span class="bus-badge">Departure: {{ bus.departure }}</span>
+              <h4>{{ bus.name }}</h4>
+              <p class="bus-route">{{ bus.route }}</p>
+            </div>
+            
+            <div class="bus-secondary">
+              <div class="price-seats">
+                <span class="price">{{ bus.price }}</span>
+                <span class="seats-badge">{{ bus.seatsLeft }} seats left</span>
+              </div>
+              <a routerLink="/seat-booking" class="book-action-btn">
+                Book Seat
+              </a>
+            </div>
+          </article>
+        }
+      </div>
+
+      <div class="station-actions">
+        <a routerLink="/route-map" class="route-link">🗺️ View Bus Route Map</a>
+        <a routerLink="/passenger-dashboard" class="dashboard-link">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>
+</section>
+
