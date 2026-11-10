@@ -1,0 +1,92 @@
+<section class="rating-page">
+  <div class="rating-container">
+    <header class="rating-header">
+      <p class="eyebrow">Passenger Feedback</p>
+      <h1>Rate Your Bus Experience</h1>
+      <p class="subtitle">
+        Help fellow commuters by rating comfort, punctuality, and staff service.
+      </p>
+    </header>
+
+    @if (!isSubmitted()) {
+      <div class="rating-card">
+        <div class="bus-selector-box">
+          <label for="busSelect">Bus Trip:</label>
+          <select id="busSelect" (change)="selectedBus.set($any($event.target).value)">
+            <option value="Weerawarna Express (WB-1024)">Weerawarna Express (WB-1024) - Colombo to Kandy</option>
+            <option value="Intercity Star (IS-7781)">Intercity Star (IS-7781) - Galle to Colombo</option>
+            <option value="City Shuttle (CS-4412)">City Shuttle (CS-4412) - Negombo to Colombo</option>
+          </select>
+        </div>
+
+        <div class="star-rating-section">
+          <p class="section-title">Select Overall Rating</p>
+          <div class="stars-row">
+            @for (star of [1, 2, 3, 4, 5]; track star) {
+              <button 
+                type="button" 
+                class="star-btn"
+                [class.active]="(hoverScore() || ratingScore()) >= star"
+                (mouseenter)="setHover(star)"
+                (mouseleave)="setHover(0)"
+                (click)="setRating(star)"
+                [attr.aria-label]="star + ' stars'">
+                ★
+              </button>
+            }
+          </div>
+          <span class="rating-badge">{{ ratingScore() }} of 5 Stars</span>
+        </div>
+
+        <!-- Feedback Tags -->
+        <div class="tags-section">
+          <p class="section-title">What went well?</p>
+          <div class="tags-grid">
+            @for (t of tags(); track t.label) {
+              <button 
+                type="button" 
+                class="tag-pill"
+                [class.selected]="t.active"
+                (click)="toggleTag(t.label)">
+                {{ t.active ? '✓ ' : '+ ' }}{{ t.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Comment Box -->
+        <div class="comment-section">
+          <label for="commentBox">Additional comments or feedback (Optional):</label>
+          <textarea 
+            id="commentBox" 
+            #commentInput 
+            rows="3" 
+            placeholder="Share details about punctuality, cleanliness, driving safety..."></textarea>
+        </div>
+
+        <div class="actions-row">
+          <button type="button" class="btn-submit" (click)="submitRating(commentInput.value)">
+            Submit Review & Rating
+          </button>
+          <a routerLink="/my-bookings" class="btn-cancel">Back to Bookings</a>
+        </div>
+      </div>
+    } @else {
+      <div class="success-card">
+        <div class="success-icon">✓</div>
+        <h2>Thank You for Your Feedback!</h2>
+        <p>Your {{ ratingScore() }}-star review for <strong>{{ selectedBus() }}</strong> has been submitted.</p>
+        @if (reviewComment()) {
+          <blockquote class="user-comment-quote">
+            "{{ reviewComment() }}"
+          </blockquote>
+        }
+        <div class="success-actions">
+          <a routerLink="/bus-list" class="btn-primary">View Buses</a>
+          <a routerLink="/passenger-dashboard" class="btn-secondary">Passenger Dashboard</a>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
