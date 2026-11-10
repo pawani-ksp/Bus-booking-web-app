@@ -13,6 +13,9 @@
 	position: sticky;
 	top: 0;
 	z-index: 20;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	padding: 14px 24px;
 	background: rgba(255, 255, 255, 0.92);
 	backdrop-filter: blur(10px);
@@ -62,6 +65,66 @@
 	text-transform: uppercase;
 }
 
+/* ── Global nav ─────────────────────────────────────────────────────────── */
+.app-nav {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+}
+
+.app-nav a {
+	padding: 0.5rem 0.9rem;
+	border-radius: 999px;
+	font-weight: 600;
+	font-size: 0.95rem;
+	text-decoration: none;
+	color: #12304d;
+	transition: background 0.15s;
+}
+
+.app-nav a:hover,
+.app-nav a.active {
+	background: #e6f2ff;
+}
+
+.nav-register {
+	background: linear-gradient(135deg, #1e3a8a, #4c95d0) !important;
+	color: #fff !important;
+}
+
+.nav-register:hover {
+	opacity: 0.88;
+}
+
+.nav-logout {
+	padding: 0.5rem 0.9rem;
+	border-radius: 999px;
+	border: none;
+	font-weight: 600;
+	font-size: 0.95rem;
+	cursor: pointer;
+	color: #b91c1c;
+	background: #fef2f2;
+	transition: background 0.15s;
+}
+
+.nav-logout:hover {
+	background: #fee2e2;
+}
+
 .app-content {
 	min-height: calc(100vh - 82px);
+}
+
+@media (max-width: 600px) {
+	.app-header {
+		flex-direction: column;
+		gap: 10px;
+		padding: 12px 16px;
+	}
+
+	.app-nav {
+		flex-wrap: wrap;
+		justify-content: center;
+	}
 }
