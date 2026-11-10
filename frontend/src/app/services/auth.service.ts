@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 
 export interface User {
@@ -10,13 +11,22 @@ export interface User {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly isBrowser = isPlatformBrowser(this.platformId);
+
   constructor(private router: Router) {}
 
   get token(): string | null {
-    return localStorage.getItem('token');
+    if (!this.isBrowser) return null;
+    try {
+      return localStorage.getItem('token');
+    } catch {
+      return null;
+    }
   }
 
   get user(): User | null {
+    if (!this.isBrowser) return null;
     try {
       const raw = localStorage.getItem('user');
       return raw ? (JSON.parse(raw) as User) : null;
@@ -38,14 +48,25 @@ export class AuthService {
    * Called by the Login component after a successful /api/auth/login response.
    */
   saveSession(token: string, user: User): void {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    if (!this.isBrowser) return;
+    try {
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+    } catch {
+      // safe fallback
+    }
   }
 
   /** Clears session and redirects to /login */
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    if (this.isBrowser) {
+      try {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      } catch {
+        // safe fallback
+      }
+    }
     this.router.navigate(['/login']);
   }
 
