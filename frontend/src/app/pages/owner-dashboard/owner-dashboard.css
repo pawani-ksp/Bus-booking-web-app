@@ -1,4 +1,150 @@
-.owner-dashboard { padding: 16px; }
-.owner-dashboard .controls a { margin-right: 12px; }
-.owner-dashboard .lists { display: flex; gap: 16px; margin-top: 12px; }
-.owner-dashboard .card { border: 1px solid #ddd; padding: 12px; border-radius: 6px; width: 100%; }
+.owner-dashboard {
+  min-height: 100vh;
+  padding: 2rem;
+  color: #12304d;
+  background:
+    radial-gradient(circle at top right, rgba(76, 149, 208, 0.15), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #edf4fb 100%);
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.dash-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.dash-header h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.logout-btn {
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #b91c1c;
+  background: #fef2f2;
+  transition: background 0.15s;
+}
+.logout-btn:hover { background: #fee2e2; }
+
+/* ── Loading / error ──────────────────────────────────────────────────────── */
+.loading-msg {
+  color: #607086;
+  font-style: italic;
+}
+.error-msg {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* ── Action links ─────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  background: linear-gradient(135deg, #1e3a8a, #4c95d0);
+  color: #fff;
+  transition: opacity 0.15s;
+}
+.action-link:hover { opacity: 0.88; }
+.action-link.secondary {
+  background: #e6f2ff;
+  color: #12304d;
+}
+
+/* ── Cards grid ───────────────────────────────────────────────────────────── */
+.lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 10px 30px rgba(18,48,77,0.09);
+}
+
+.card h3 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  color: #0f2f57;
+}
+
+.empty-msg {
+  color: #8ba3bb;
+  font-style: italic;
+}
+
+/* ── Item list ────────────────────────────────────────────────────────────── */
+.item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #f0f7ff;
+  border-left: 4px solid #4c95d0;
+}
+
+.item-name {
+  font-weight: 700;
+  color: #12304d;
+}
+
+.item-name em {
+  font-style: normal;
+  font-weight: 400;
+  color: #607086;
+  font-size: 0.88rem;
+}
+
+.item-meta {
+  font-size: 0.85rem;
+  color: #607086;
+}
+
+.item-badge {
+  margin-top: 0.25rem;
+  display: inline-block;
+  width: fit-content;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: #fff4d4;
+  color: #a16207;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 640px) {
+  .owner-dashboard { padding: 1rem; }
+  .dash-header      { flex-wrap: wrap; gap: 0.75rem; }
+}
